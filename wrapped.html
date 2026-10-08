@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Encore Wrapped</title>
+<meta name="description" content="A year in music, printed by Encore.">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Ultra&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #000000;
+  --bone: #EFEBE4;
+  --blood: #A3161B;
+  --ash: #8C877F;
+  --soot: #171513;
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 .97  0 0 0 0 .92  0 0 0 .055 0'/></filter><rect width='220' height='220' filter='url(%23n)'/></svg>");
+  --display: "Ultra", "Rockwell Extra Bold", "Rockwell", Georgia, serif;
+  --text: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --pad: clamp(22px, 6.5cqw, 34px);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: var(--black); color: var(--bone); }
+body { font-family: var(--text); font-stretch: 100%; -webkit-font-smoothing: antialiased; overflow: hidden; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--bone); outline-offset: 3px; }
+
+/* the phone-shaped story, centred on big screens, full screen on phones */
+.stage { position: fixed; inset: 0; display: grid; place-items: center; }
+.backdrop { position: absolute; inset: -40px; background-size: cover; background-position: center; filter: grayscale(1) blur(40px) brightness(.25); transition: background-image .6s; }
+.story {
+  position: relative; container-type: inline-size;
+  width: min(100vw, calc(100svh * 9 / 17.5)); height: min(100svh, calc(100vw * 17.5 / 9));
+  background: var(--black); overflow: hidden;
+}
+@media (max-width: 619px) { .story { width: 100vw; height: 100svh; } }
+@media (min-width: 620px) { .story { height: min(94svh, 900px); width: calc(min(94svh, 900px) * 9 / 17.5); border-radius: 14px; box-shadow: 0 0 0 1px #ffffff14; } }
+.story::after { content: ""; position: absolute; inset: 0; background: var(--grain); pointer-events: none; z-index: 30; mix-blend-mode: screen; }
+
+.bars { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; gap: 4px; z-index: 40; }
+.bars span { flex: 1; height: 3px; background: #ffffff2b; border-radius: 2px; overflow: hidden; }
+.bars i { display: block; height: 100%; width: 0; background: var(--bone); }
+.brand { position: absolute; top: 24px; left: var(--pad); right: var(--pad); display: flex; justify-content: space-between; align-items: center; z-index: 40; font-size: 12.5px; color: var(--ash); letter-spacing: .02em; }
+.brand b { color: var(--bone); font-weight: 700; font-stretch: 125%; letter-spacing: .04em; }
+.tap { position: absolute; top: 60px; bottom: 0; z-index: 35; }
+.tap.prev { left: 0; width: 32%; } .tap.next { right: 0; width: 68%; }
+
+.slide { position: absolute; inset: 0; padding: 78px var(--pad) var(--pad); display: flex; flex-direction: column; opacity: 0; visibility: hidden; transition: opacity .45s ease, visibility 0s .45s; }
+.slide.on { opacity: 1; visibility: visible; transition: opacity .45s ease; }
+
+/* type */
+.kicker { font-size: clamp(15px, 4.4cqw, 19px); color: var(--ash); line-height: 1.35; max-width: 32ch; }
+.say { font-size: clamp(19px, 5.6cqw, 25px); line-height: 1.28; font-weight: 600; max-width: 24ch; }
+.say em { font-style: normal; color: var(--bone); }
+.small { font-size: clamp(13.5px, 3.7cqw, 15.5px); color: var(--ash); line-height: 1.45; max-width: 36ch; }
+/* the screen-print look: bone ink with a red layer printed slightly off-register */
+.print { font-family: var(--display); font-weight: 400; color: var(--bone); line-height: .92; letter-spacing: -.01em; text-shadow: .045em .035em 0 var(--blood); overflow-wrap: anywhere; }
+.huge { font-size: clamp(64px, 25cqw, 132px); }
+.big { font-size: clamp(42px, 14.5cqw, 82px); }
+.mid { font-size: clamp(30px, 9.6cqw, 52px); }
+.grow { flex: 1; min-height: 12px; }
+.stack > * + * { margin-top: 14px; }
+
+/* halftone print of photos: greyscale, crushed, then a dot screen */
+.halftone { position: relative; background: var(--soot); overflow: hidden; }
+.halftone img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1) contrast(1.35) brightness(1.05);
+  -webkit-mask-image: radial-gradient(circle, #000 48%, transparent 56%); mask-image: radial-gradient(circle, #000 48%, transparent 56%);
+  -webkit-mask-size: 5px 5px; mask-size: 5px 5px; }
+.halftone.solid img { -webkit-mask-image: none; mask-image: none; }
+.halftone .ghost { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--display); color: var(--bone); text-shadow: .05em .04em 0 var(--blood); }
+.halftone .ghost { font-size: 40cqw; line-height: 1; }
+
+/* record motif */
+.record { width: 78cqw; aspect-ratio: 1; margin: 0 auto; position: relative; }
+.record svg { width: 100%; height: 100%; display: block; }
+.spin { animation: spin 1.9s linear infinite; transform-origin: 50% 50%; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ranked lists (they really are rankings, so numbers stay) */
+.rank { list-style: none; display: grid; gap: 12px; }
+.rank li { display: grid; grid-template-columns: 2.2ch 54px 1fr; gap: 12px; align-items: center; }
+.rank .n { font-family: var(--display); font-size: 24px; color: var(--bone); text-shadow: 2px 1px 0 var(--blood); }
+.rank .halftone { width: 54px; height: 54px; border-radius: 4px; }
+.rank .halftone .ghost { font-size: 26px; }
+.rank b { display: block; font-size: clamp(16px, 4.6cqw, 19px); font-weight: 700; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank small { display: block; font-size: 13.5px; color: var(--ash); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rank li:first-child b { font-size: clamp(19px, 5.6cqw, 23px); }
+
+/* charts */
+.months { display: grid; grid-template-columns: repeat(12, 1fr); gap: 5px; align-items: end; height: 34cqh; height: 38cqw; }
+.months div { background: #ffffff1f; border-radius: 2px 2px 0 0; position: relative; height: var(--h); min-height: 3px; transform-origin: bottom; }
+.months div.top { background: var(--bone); box-shadow: 3px 2px 0 var(--blood); }
+.monthlabels { display: grid; grid-template-columns: repeat(12, 1fr); gap: 5px; font-size: 11px; color: var(--ash); text-align: center; margin-top: 8px; }
+.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 16px; }
+.facts div b { display: block; font-family: var(--display); font-size: clamp(26px, 8cqw, 40px); line-height: 1; text-shadow: 2px 2px 0 var(--blood); }
+.facts div span { display: block; font-size: 13.5px; color: var(--ash); margin-top: 6px; line-height: 1.35; }
+
+/* personality */
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.tiles div { aspect-ratio: 3/4; border: 2px solid var(--bone); display: grid; place-items: center; font-family: var(--display); font-size: clamp(34px, 12cqw, 58px); text-shadow: 3px 2px 0 var(--blood); }
+.traits { display: grid; gap: 10px; }
+.traits p { font-size: 15px; line-height: 1.4; color: var(--ash); }
+.traits p b { color: var(--bone); font-weight: 700; }
+
+/* the poster (last slide) */
+.poster { background: var(--bone); color: #0d0c0b; border-radius: 6px; padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 12px; position: relative; overflow: hidden; }
+.poster::after { content: ""; position: absolute; inset: 0; background: var(--grain); mix-blend-mode: multiply; opacity: .9; pointer-events: none; }
+.poster .head { display: flex; gap: 12px; align-items: center; }
+.poster .halftone { width: 64px; height: 64px; border-radius: 3px; background: #0d0c0b; flex: none; }
+.poster .halftone .ghost { font-size: 38px; }
+.poster h2 { font-family: var(--display); font-weight: 400; font-size: clamp(24px, 7.4cqw, 34px); line-height: .95; color: #0d0c0b; text-shadow: 2px 2px 0 #A3161B66; overflow-wrap: anywhere; }
+.poster .sub { font-size: 12.5px; color: #4a4642; margin-top: 4px; }
+.poster .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.poster h3 { font-size: 12.5px; font-weight: 800; font-stretch: 125%; color: var(--blood); margin-bottom: 6px; }
+.poster ol { list-style: none; display: grid; gap: 3px; counter-reset: r; }
+.poster ol li { counter-increment: r; font-size: 13px; font-weight: 600; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.poster ol li::before { content: counter(r) "  "; font-weight: 800; color: var(--blood); }
+.poster .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 2px solid #0d0c0b; padding-top: 10px; }
+.poster .row b { display: block; font-family: var(--display); font-size: clamp(22px, 6.6cqw, 30px); line-height: 1; }
+.poster .row span { font-size: 12px; color: #4a4642; }
+.poster .foot { display: flex; justify-content: space-between; font-size: 11.5px; color: #4a4642; border-top: 1px solid #0d0c0b40; padding-top: 8px; }
+.actions { display: flex; gap: 10px; margin-top: 14px; position: relative; z-index: 36; }
+.actions button { flex: 1; padding: 13px 10px; border-radius: 999px; font-weight: 700; font-size: 15px; }
+.actions .primary { background: var(--bone); color: #000; }
+.actions .ghostbtn { box-shadow: inset 0 0 0 1.5px #ffffff55; }
+
+.center { text-align: center; align-items: center; }
+.hint { font-size: 13px; color: var(--ash); }
+.msg { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 40px; z-index: 50; }
+.msg p { max-width: 30ch; line-height: 1.5; color: var(--ash); }
+.msg p b { display: block; color: var(--bone); font-family: var(--display); font-weight: 400; font-size: 30px; line-height: 1.05; margin-bottom: 14px; text-shadow: 2px 2px 0 var(--blood); }
+.toast { position: absolute; left: 50%; bottom: 26px; transform: translate(-50%, 20px); background: var(--bone); color: #000; font-weight: 700; padding: 10px 16px; border-radius: 999px; opacity: 0; transition: .25s; z-index: 60; font-size: 14px; }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .spin { animation: none; }
+  .slide, .slide.on { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="backdrop" id="backdrop"></div>
+  <main class="story" id="story" aria-live="polite">
+    <div class="bars" id="bars"></div>
+    <div class="brand"><b>encore</b><span id="brandLabel"></span></div>
+    <div id="slides"></div>
+    <button class="tap prev" id="prev" aria-label="Previous"></button>
+    <button class="tap next" id="next" aria-label="Next"></button>
+    <div class="toast" id="toast"></div>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js" defer></script>
+<script>
+(() => {
+  const $ = (s, el = document) => el.querySelector(s);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const nf = (n) => Number(n || 0).toLocaleString("en-US");
+  const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const hourName = (h) => `${h % 12 || 12}${h < 12 ? "am" : "pm"}`;
+  const dayName = (d) => { const [y, m, dd] = String(d).split("-"); return `${+dd} ${MONTHS[+m - 1]}`; };
+  const img = (u) => u ? `/api/img?u=${encodeURIComponent(u)}` : "";
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const id = location.pathname.split("/").filter(Boolean).pop();
+  const story = $("#story");
+
+  function message(title, text) {
+    story.insertAdjacentHTML("beforeend", `<div class="msg"><p><b>${esc(title)}</b>${esc(text)}</p></div>`);
+  }
+  if (!id || id === "wrapped" || id === "wrapped.html") return message("Encore Wrapped", "Run /wrapped in Discord to get your link.");
+
+  fetch(`/api/wrapped?id=${encodeURIComponent(id)}`).then(async r => {
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || "Couldn't load this Wrapped.");
+    return j;
+  }).then(build).catch(e => message("Not found", e.message));
+
+  // a picture with a halftone print, or the first letter printed big when there's no picture
+  const photo = (url, name, solid = false) =>
+    `<div class="halftone${solid ? " solid" : ""}">${url ? `<img src="${img(url)}" alt="" crossorigin="anonymous" onerror="this.remove()">` : ""}<div class="ghost" ${url ? 'style="display:none"' : ""}>${esc(String(name || "?").trim().charAt(0).toUpperCase())}</div></div>`;
+
+  function recordSVG(hours) {
+    // a record whose grooves are the 24-hour clock: longer spokes = more listening at that hour
+    const max = Math.max(1, ...(hours || []));
+    const spokes = (hours || []).map((v, h) => {
+      const a = (h / 24) * Math.PI * 2 - Math.PI / 2, r0 = 23, r1 = 23 + 23 * (v / max);
+      return `<line x1="${50 + r0 * Math.cos(a)}" y1="${50 + r0 * Math.sin(a)}" x2="${50 + r1 * Math.cos(a)}" y2="${50 + r1 * Math.sin(a)}" stroke="${v === max ? "#EFEBE4" : "#EFEBE466"}" stroke-width="${v === max ? 2.6 : 1.8}" stroke-linecap="round"/>`;
+    }).join("");
+    const grooves = [30, 34, 38, 42, 46].map(r => `<circle cx="50" cy="50" r="${r}" fill="none" stroke="#ffffff10" stroke-width=".5"/>`).join("");
+    const labels = hours ? [["12am", 50, 3.4], ["6am", 97.5, 51.2], ["12pm", 50, 99.4], ["6pm", 2.5, 51.2]].map(([t, x, y]) => `<text x="${x}" y="${y}" fill="#8C877F" font-size="3.2" text-anchor="middle" font-family="Archivo">${t}</text>`).join("") : "";
+    return `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" fill="#0b0a09"/>${grooves}${spokes}
+      <circle cx="50" cy="50" r="17" fill="#A3161B"/><circle cx="50" cy="50" r="17" fill="none" stroke="#EFEBE4" stroke-opacity=".35" stroke-width=".6"/>
+      <circle cx="50" cy="50" r="1.6" fill="#000"/>${labels}</svg>`;
+  }
+
+  function build(d) {
+    const user = d.kind !== "server";
+    const S = [];   // slides: { html, ms, img }
+    const firstName = String(d.name || "").split(" ")[0];
+    document.title = `${d.name} · Encore Wrapped ${d.label}`;
+    $("#brandLabel").textContent = `Wrapped ${d.label}`;
+    const A = d.topArtists || [], T = d.topTracks || [];
+
+    // 1. cover
+    S.push({ ms: 5200, html: `
+      <div class="stack"><p class="kicker">${user ? `${esc(firstName)}, here's` : `Here's ${esc(d.name)}'s`} ${esc(d.label)} in music.</p></div>
+      <div class="grow"></div>
+      <div class="record"><div class="spin" style="width:100%;height:100%">${recordSVG(null)}</div></div>
+      <div class="grow"></div>
+      <h1 class="print big">${user ? "Played it again." : "Played it loud."}</h1>
+      <p class="hint" style="margin-top:14px">Tap to start. Hold to pause.</p>` });
+
+    // 2. minutes
+    const days = (d.minutes / 1440);
+    S.push({ ms: 6200, count: d.minutes, html: `
+      <p class="say">${user ? "You listened for" : "This server played music for"}</p>
+      <div class="grow"></div>
+      <p class="print huge" data-count="${d.minutes}">0</p>
+      <p class="say" style="margin-top:10px">minutes.</p>
+      <div class="grow"></div>
+      <p class="small">That's ${days >= 1 ? `${days.toFixed(1)} full days` : `${(d.minutes / 60).toFixed(1)} hours`} of music, spread across ${nf(d.daysActive)} days. ${nf(d.streams)} streams, ${nf(d.songs)} different songs, ${nf(d.artists)} artists.</p>` });
+
+    // 3. server: who carried it
+    if (!user && d.listeners?.length) S.push({ ms: 7500, html: `
+      <p class="say">The people who kept the music going.</p>
+      <div class="grow"></div>
+      <ol class="rank">${d.listeners.map((l, i) => `<li><span class="n">${i + 1}</span>${photo(l.avatar, l.name, true)}<div><b>${esc(l.name)}</b><small>${nf(l.minutes)} minutes · ${nf(l.plays)} songs</small></div></li>`).join("")}</ol>
+      <div class="grow"></div>` });
+
+    // 4. top artist
+    if (A[0]) S.push({ ms: 7500, img: A[0].img, html: `
+      <p class="say">${user ? "One artist owned your year." : "The server's artist of the year."}</p>
+      <div class="grow"></div>
+      <div style="width:100%;aspect-ratio:1.05;border-radius:6px;overflow:hidden">${photo(A[0].img, A[0].name).replace('class="halftone', 'style="width:100%;height:100%" class="halftone')}</div>
+      <h2 class="print big" style="margin-top:-0.45em;position:relative">${esc(A[0].name)}</h2>
+      <div class="grow"></div>
+      <div class="facts">
+        <div><b>${nf(A[0].minutes)}</b><span>minutes together</span></div>
+        <div><b>${nf(A[0].plays)}</b><span>streams of ${nf(A[0].songs)} songs</span></div>
+        ${d.topArtistBestSong ? `<div style="grid-column:1/-1"><span>${user ? "Your go-to" : "Most played"}: <b style="display:inline;font-family:var(--text);font-size:15px;text-shadow:none;color:var(--bone)">${esc(d.topArtistBestSong.n)}</b>, ${nf(d.topArtistBestSong.plays)} plays${user && d.topArtistFirstEver ? `. You first played them on ${new Date(d.topArtistFirstEver).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}.` : "."}</span></div>` : ""}
+      </div>` });
+
+    // 5. top artists
+    if (A.length > 1) S.push({ ms: 7500, html: `
+      <p class="say">${user ? "Your top artists" : "Top artists"}</p>
+      <div class="grow"></div>
+      <ol class="rank">${A.map((a, i) => `<li><span class="n">${i + 1}</span>${photo(a.img, a.name)}<div><b>${esc(a.name)}</b><small>${nf(a.minutes)} minutes</small></div></li>`).join("")}</ol>
+      <div class="grow"></div>` });
+
+    // 6. top song
+    if (T[0]) S.push({ ms: 7500, img: T[0].img, html: `
+      <p class="say">${user ? "And the song you couldn't stop playing" : "The song of the year"}</p>
+      <div class="grow"></div>
+      <div style="width:76%;aspect-ratio:1;margin:0 auto;border-radius:6px;overflow:hidden;box-shadow:8px 7px 0 var(--blood)">${photo(T[0].img, T[0].name).replace('class="halftone', 'style="width:100%;height:100%" class="halftone')}</div>
+      <div class="grow"></div>
+      <h2 class="print mid">${esc(T[0].name)}</h2>
+      <p class="kicker" style="margin-top:8px">${esc(T[0].artist)}</p>
+      <p class="say" style="margin-top:14px"><span data-count="${T[0].plays}">0</span> plays.</p>` });
+
+    // 7. top songs
+    if (T.length > 1) S.push({ ms: 7500, html: `
+      <p class="say">${user ? "Your top songs" : "Top songs"}</p>
+      <div class="grow"></div>
+      <ol class="rank">${T.map((t, i) => `<li><span class="n">${i + 1}</span>${photo(t.img, t.name)}<div><b>${esc(t.name)}</b><small>${esc(t.artist)} · ${nf(t.plays)} plays</small></div></li>`).join("")}</ol>
+      <div class="grow"></div>` });
+
+    // 8. obsession
+    if (d.obsession && d.obsession.plays >= 4) S.push({ ms: 6200, html: `
+      <p class="kicker">${dayName(d.obsession.day)}.</p>
+      <div class="grow"></div>
+      <p class="say">${user ? "You played" : "Someone played"}</p>
+      <h2 class="print big" style="margin:10px 0">${esc(d.obsession.n)}</h2>
+      <p class="say"><span class="print mid" style="font-size:1.8em" data-count="${d.obsession.plays}">0</span> times. In one day.</p>
+      <div class="grow"></div>
+      <p class="small">${user ? "No judgement. It's a good song." : "Nobody complained, apparently."}</p>` });
+
+    // 9. clock
+    if (d.hours?.some(Boolean)) {
+      const night = Math.round((d.nightPct || 0) * 100);
+      const tag = night >= 22 ? "Certified night owl." : (d.morningPct || 0) > .3 ? "An early bird with a soundtrack." : "A daytime listener.";
+      S.push({ ms: 7500, html: `
+        <p class="say">${user ? "You hit play most at" : "This server comes alive at"}</p>
+        <h2 class="print huge" style="margin-top:6px">${hourName(d.peakHour)}</h2>
+        <div class="grow"></div>
+        <div class="record" style="width:84cqw">${recordSVG(d.hours)}</div>
+        <div class="grow"></div>
+        <p class="small">${night}% of the listening happened between 11pm and 5am. ${user ? tag : ""}</p>` });
+    }
+
+    // 10. months
+    const months = (d.months || []).slice(-12);
+    if (months.length >= 3) {
+      const mx = Math.max(...months.map(m => m.minutes)), best = months.find(m => m.minutes === mx);
+      S.push({ ms: 7000, html: `
+        <p class="say">${MONTHS[+best.m.slice(5, 7) - 1]} was the loudest month.</p>
+        <p class="small" style="margin-top:8px">${nf(best.minutes)} minutes in ${MONTHS[+best.m.slice(5, 7) - 1]} alone.</p>
+        <div class="grow"></div>
+        <div class="months">${months.map(m => `<div class="${m === best ? "top" : ""}" style="--h:${Math.max(2, Math.round((m.minutes / mx) * 100))}%" title="${esc(m.m)}: ${nf(m.minutes)} min"></div>`).join("")}</div>
+        <div class="monthlabels">${months.map(m => `<span>${MONTHS[+m.m.slice(5, 7) - 1][0]}</span>`).join("")}</div>
+        <div class="grow"></div>` });
+    }
+
+    // 11. streak + biggest day
+    if (d.streak?.len >= 2) S.push({ ms: 6500, html: `
+      <p class="say">${user ? "Your longest run" : "The server's longest run"}</p>
+      <div class="grow"></div>
+      <h2 class="print huge"><span data-count="${d.streak.len}">0</span></h2>
+      <p class="say" style="margin-top:6px">days in a row.</p>
+      <p class="small" style="margin-top:12px">From ${dayName(d.streak.from)} to ${dayName(d.streak.to)}, not one day without music.</p>
+      <div class="grow"></div>
+      ${d.busiestDay ? `<div class="facts"><div><b>${nf(d.busiestDay.minutes)}</b><span>minutes on the biggest day, ${dayName(d.busiestDay.day)}</span></div><div><b>${nf(d.avgPerDay)}</b><span>minutes on an average day with music</span></div></div>` : ""}` });
+
+    // 12. deep cuts (only when there's Spotify history with these details)
+    const deep = [];
+    if (d.discovered?.count) deep.push(`<div><b>${nf(d.discovered.count)}</b><span>artists you heard for the first time${d.discovered.first ? `, led by ${esc(d.discovered.first)}` : ""}</span></div>`);
+    if (d.skips?.count) deep.push(`<div><b>${Math.round(d.skips.rate * 100)}%</b><span>of songs got skipped</span></div>`);
+    if (d.platforms?.length) deep.push(`<div><b>${esc(d.platforms[0].p.split(" ")[0])}</b><span>where you listened most (${nf(d.platforms[0].minutes)} min)</span></div>`);
+    if (d.shufflePct != null) deep.push(`<div><b>${Math.round(d.shufflePct * 100)}%</b><span>of plays on shuffle</span></div>`);
+    if (d.topAlbum) deep.push(`<div><b style="font-size:clamp(20px,6cqw,28px)">${esc(d.topAlbum.name)}</b><span>top album, by ${esc(d.topAlbum.artist)}</span></div>`);
+    if (user && deep.length >= 2) S.push({ ms: 8000, html: `
+      <p class="say">The deep cuts</p>
+      <div class="grow"></div>
+      <div class="facts">${deep.slice(0, 6).join("")}</div>
+      <div class="grow"></div>` });
+
+    // 13. personality
+    if (user && d.personality) S.push({ ms: 8500, html: `
+      <p class="say">Your listening personality</p>
+      <div class="grow"></div>
+      <div class="tiles">${d.personality.code.split("").map(c => `<div>${esc(c)}</div>`).join("")}</div>
+      <h2 class="print mid" style="margin:18px 0 14px">${esc(d.personality.title)}</h2>
+      <div class="traits">${d.personality.traits.map(t => `<p><b>${esc(t.k)}</b>: ${esc(t.d)}.</p>`).join("")}</div>
+      <div class="grow"></div>` });
+
+    // 14. the poster
+    const src = d.sources || {};
+    const via = [src.e ? `${nf(src.e)} on Encore` : "", (src.p || 0) + (src.i || 0) ? `${nf((src.p || 0) + (src.i || 0))} on Spotify` : ""].filter(Boolean).join(", ");
+    S.push({ ms: 0, img: A[0]?.img, html: `
+      <div class="grow"></div>
+      <div class="poster" id="poster">
+        <div class="head">${photo(d.avatar || A[0]?.img, d.name, !!d.avatar)}<div><h2>${esc(d.name)}</h2><p class="sub">Encore Wrapped ${esc(d.label)}</p></div></div>
+        <div class="cols">
+          <div><h3>Top artists</h3><ol>${A.slice(0, 5).map(a => `<li>${esc(a.name)}</li>`).join("")}</ol></div>
+          <div><h3>Top songs</h3><ol>${T.slice(0, 5).map(t => `<li>${esc(t.name)}</li>`).join("")}</ol></div>
+        </div>
+        <div class="row">
+          <div><b>${nf(d.minutes)}</b><span>minutes listened</span></div>
+          <div>${user && d.personality ? `<b style="font-size:clamp(15px,4.4cqw,19px);line-height:1.1">${esc(d.personality.title)}</b><span>listening personality</span>` : `<b>${hourName(d.peakHour)}</b><span>peak hour</span>`}</div>
+        </div>
+        <div class="foot"><span>${via ? esc(via) + " plays" : "&nbsp;"}</span><span>encore · play it again</span></div>
+      </div>
+      <div class="actions"><button class="primary" id="save">Save image</button><button class="ghostbtn" id="share">Copy link</button></div>
+      <p class="hint" style="text-align:center;margin-top:12px">Get yours: run /wrapped in any server with Encore.</p>
+      <div class="grow"></div>` });
+
+    // ---------- story player ----------
+    const wrap = $("#slides"), bars = $("#bars");
+    wrap.innerHTML = S.map((s, i) => `<section class="slide" data-i="${i}" aria-label="Slide ${i + 1} of ${S.length}">${s.html}</section>`).join("");
+    bars.innerHTML = S.map(() => `<span><i></i></span>`).join("");
+    // show the letter instead when a photo fails
+    wrap.querySelectorAll(".halftone img").forEach(im => im.addEventListener("error", () => { const g = im.parentElement.querySelector(".ghost"); if (g) g.style.display = ""; }));
+    let cur = -1, t0 = 0, elapsed = 0, paused = false, raf = 0;
+
+    function countUp(el) {
+      const target = +el.dataset.count;
+      if (reduce) { el.textContent = nf(target); return; }
+      const start = performance.now(), dur = 1500;
+      const step = (now) => { const p = Math.min(1, (now - start) / dur), e = 1 - Math.pow(1 - p, 3); el.textContent = nf(Math.round(target * e)); if (p < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }
+    function go(i) {
+      if (i < 0 || i >= S.length) return;
+      cur = i; elapsed = 0; t0 = performance.now();
+      wrap.querySelectorAll(".slide").forEach((el, k) => el.classList.toggle("on", k === i));
+      [...bars.children].forEach((b, k) => { b.firstChild.style.width = k < i ? "100%" : "0"; });
+      const el = wrap.children[i];
+      el.querySelectorAll("[data-count]").forEach(countUp);
+      const bg = S[i].img || A[0]?.img;
+      $("#backdrop").style.backgroundImage = bg ? `url("${img(bg)}")` : "none";
+    }
+    function tick(now) {
+      if (!paused && cur >= 0 && S[cur].ms) {
+        elapsed += now - t0;
+        const p = Math.min(1, elapsed / S[cur].ms);
+        bars.children[cur].firstChild.style.width = (p * 100) + "%";
+        if (p >= 1) go(cur + 1);
+      } else if (cur >= 0 && !S[cur].ms) bars.children[cur].firstChild.style.width = "100%";
+      t0 = now;
+      raf = requestAnimationFrame(tick);
+    }
+    let holdTimer = 0, held = false;
+    const down = () => { held = false; holdTimer = setTimeout(() => { held = true; paused = true; }, 220); };
+    const up = (dir) => () => { clearTimeout(holdTimer); if (held) { paused = false; return; } go(cur + dir); };
+    for (const [btn, dir] of [[$("#prev"), -1], [$("#next"), 1]]) {
+      btn.addEventListener("pointerdown", down);
+      btn.addEventListener("pointerup", up(dir));
+      btn.addEventListener("pointerleave", () => { clearTimeout(holdTimer); if (held) paused = false; });
+      btn.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(cur + dir); } });
+    }
+    addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") go(cur + 1);
+      else if (e.key === "ArrowLeft") go(cur - 1);
+      else if (e.key === " ") { paused = !paused; e.preventDefault(); }
+    });
+    document.addEventListener("visibilitychange", () => { paused = document.hidden; });
+    // the last slide's buttons sit above the tap zones
+    const last = wrap.lastElementChild;
+    const toast = (t) => { const el = $("#toast"); el.textContent = t; el.classList.add("on"); setTimeout(() => el.classList.remove("on"), 1800); };
+    last.querySelector("#share").addEventListener("click", async () => {
+      const url = location.href;
+      try { if (navigator.share) await navigator.share({ title: document.title, url }); else { await navigator.clipboard.writeText(url); toast("Link copied"); } }
+      catch { try { await navigator.clipboard.writeText(url); toast("Link copied"); } catch { toast(url); } }
+    });
+    last.querySelector("#save").addEventListener("click", async () => {
+      const node = $("#poster");
+      try {
+        const data = await window.htmlToImage.toPng(node, { pixelRatio: 3, cacheBust: true, backgroundColor: "#EFEBE4" });
+        const a = document.createElement("a"); a.href = data; a.download = `encore-wrapped-${String(d.label).replace(/\W+/g, "-")}.png`; a.click();
+        toast("Saved");
+      } catch { toast("Couldn't save. Take a screenshot instead."); }
+    });
+    const lastTap = () => { $("#next").style.display = cur === S.length - 1 ? "none" : ""; $("#prev").style.width = cur === S.length - 1 ? "18%" : ""; };
+    const _go = go; go = (i) => { _go(i); lastTap(); };
+    go(0);
+    raf = requestAnimationFrame(tick);
+  }
+})();
+</script>
+</body>
+</html>
