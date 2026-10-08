@@ -1,7 +1,7 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/w/:id", "destination": "/wrapped.html" }
+    { "source": "/w/:id", "destination": "/wrapped" }
   ],
   "headers": [
     { "source": "/(.*)", "headers": [{ "key": "X-Content-Type-Options", "value": "nosniff" }] }
