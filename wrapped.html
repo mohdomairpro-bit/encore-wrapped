@@ -337,7 +337,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
     // 14. the poster
     const src = d.sources || {};
-    const via = [src.e ? `${nf(src.e)} on Encore` : "", (src.p || 0) + (src.i || 0) ? `${nf((src.p || 0) + (src.i || 0))} on Spotify` : ""].filter(Boolean).join(", ");
+    const via = [src.e ? `${nf(src.e)} on Encore` : "", (src.p || 0) + (src.i || 0) + (src.l || 0) ? `${nf((src.p || 0) + (src.i || 0) + (src.l || 0))} on Spotify` : ""].filter(Boolean).join(", ");
     S.push({ ms: 0, img: A[0]?.img, html: `
       <div class="grow"></div>
       <div class="poster" id="poster">
