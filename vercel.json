@@ -1,9 +1,27 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/w/:id", "destination": "/wrapped" }
+    {
+      "source": "/w/:id",
+      "destination": "/wrapped"
+    }
   ],
   "headers": [
-    { "source": "/(.*)", "headers": [{ "key": "X-Content-Type-Options", "value": "nosniff" }] }
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/invite",
+      "destination": "https://discord.com/oauth2/authorize?client_id=1495782087574159471&permissions=8280043801800128&integration_type=0&scope=bot+applications.commands",
+      "permanent": false
+    }
   ]
 }
